@@ -1,0 +1,49 @@
+---
+# to run: ansible-playbook -i hosts.list setup.yml
+- hosts: all  
+  tasks:             
+  connection: local
+  tasks:
+  - name: Install required packages from deb 
+    sudo: yes
+    apt: pkg={{item}} update_cache=yes  
+    with_items:
+       - vim
+       - git
+       - gnupg 
+       - flex 
+       - bison 
+       - gperf 
+       - build-essential
+       - zip
+       - bzr
+       - curl
+       - libc6-dev
+       - libncurses5-dev:i386
+       - x11proto-core-dev
+       - libx11-dev:i386 
+       - libreadline6-dev:i386 
+       - libgl1-mesa-glx:i386 
+       - libgl1-mesa-dev 
+       - g++-multilib 
+       - mingw32 
+       - python-markdown 
+       - libxml2-utils 
+       - xsltproc 
+       - zlib1g-dev:i386 
+       - schedtool
+       - tofrodos
+  
+  
+  - name: Set up the Touch Developer Preview Tools PPA
+    sudo: yes
+    apt_repository: repo='ppa:phablet-team/tools' state=present    
+    
+  - name: Install required packages from phablet PPA 
+    sudo: yes
+    apt: pkg={{item}} update_cache=yes  
+    with_items:
+       - phablet-tools
+
+  - name: Download the source
+    cmd: phablet-dev-bootstrap -v maguro /home/ubuntu/touch_dev
